@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 from langchain_community.document_loaders import DirectoryLoader, TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
@@ -6,10 +7,15 @@ from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from typing import List
 from langchain.schema import Document
 
+load_dotenv()
+
 # Knowledge Base Manager with RAG
 class KnowledgeBaseManager:
     def __init__(self, path: str):
         self.path = path
+        self.google_api_key = os.getenv("GOOGLE_API_KEY")
+        if not self.google_api_key:
+            raise ValueError("GOOGLE_API_KEY not found in environment variables")
         self.vector_store = self._init_vector_store()
 
     def _init_vector_store(self):
@@ -35,7 +41,7 @@ class KnowledgeBaseManager:
             chunk_overlap=200
         )
         documents = text_splitter.split_documents(docs)
-        embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=GOOGLE_API_KEY)
+        embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=self.google_api_key)
         return FAISS.from_documents(documents, embeddings)
 
     def _create_sample_knowledge(self):
