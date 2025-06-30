@@ -1,0 +1,5 @@
+COB Company Policies:
+- Return Policy: 30-day money-back guarantee
+- Warranty: 1-year limited warranty
+- Data Privacy: GDPR and CCPA compliant
+- SLA: 99.9% uptime guarantee

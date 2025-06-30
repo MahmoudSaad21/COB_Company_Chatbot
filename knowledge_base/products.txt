@@ -1,0 +1,6 @@
+COB Company Products:
+- Analytics Pro: Advanced data analytics platform
+- Security Guard: Cybersecurity suite
+- Health Tracker: Wearable health device
+- EduMaster: AI-driven tutoring platform
+- EcoPack: Sustainable packaging solutions
