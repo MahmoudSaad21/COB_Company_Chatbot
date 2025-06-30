@@ -68,8 +68,8 @@ def inspect_database(db_path: str, db_name: str):
         print(f"\nConnection to {db_path} closed.")
 
 if __name__ == '__main__':
-    clinic_db_path = '/content/clinic_appointments_2.db'
-    cob_db_path = '/content/cob_system_2.db'
+    clinic_db_path = 'clinic_appointments_2.db'
+    cob_db_path = 'cob_system_2.db'
     
     inspect_database(clinic_db_path, "Clinic Database")
     inspect_database(cob_db_path, "COB Database")
