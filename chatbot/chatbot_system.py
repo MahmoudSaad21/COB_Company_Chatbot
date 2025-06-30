@@ -3,7 +3,8 @@ from .agents import ClinicalAgent, MarketingAgent, KnowledgeAgent
 from .database.manager import DatabaseManager
 from .knowledge_base.manager import KnowledgeBaseManager
 from langchain_google_genai import ChatGoogleGenerativeAI
-
+from typing import Dict
+from .models.appointments import AppointmentRequest, MarketingMeetingRequest 
 class COBCustomerCareSystem:
     def __init__(self, clinic_db_path: str, cob_db_path: str, knowledge_base_path: str):
         self.llm = ChatGoogleGenerativeAI(
