@@ -11,6 +11,7 @@ def gen_clinic_schedule(num_clinics: int, doctors_per_clinic: int, days: int,
     start_date = datetime.today()
     specialties = ['Cardiology', 'Dermatology', 'Pediatrics', 'Orthopedics', 
                   'Neurology', 'Oncology', 'General Practice', 'ENT', 'Ophthalmology']
+    
     clinics = [{'clinic_id': str(uuid4()), 'clinic_name': fake.company()} 
               for _ in range(num_clinics)]
     

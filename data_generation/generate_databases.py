@@ -1,9 +1,9 @@
 import sqlite3
 import pandas as pd
-from .clinic_data import gen_clinic_schedule
-from .cob_data import gen_products_manual, gen_marketing_schedule, gen_cob_customers
+from clinic_data import gen_clinic_schedule
+from cob_data import gen_products_manual, gen_marketing_schedule, gen_cob_customers
 
-if __name__ == '__main__':
+def generate_databases():
     # Generate data
     products_df = gen_products_manual()
     customers_df = gen_cob_customers(100, products_df)
@@ -70,3 +70,6 @@ if __name__ == '__main__':
         customers_df.to_sql('customers', conn, if_exists='replace', index=False)
 
     print("✅ SQLite databases created and populated successfully.")
+
+if __name__ == '__main__':
+    generate_databases()
