@@ -1,3 +1,6 @@
+import os
+import time
+from dotenv import load_dotenv
 from .main_agent import MainOrchestratorAgent
 from .agents import ClinicalAgent, MarketingAgent, KnowledgeAgent
 from .database.manager import DatabaseManager
@@ -5,11 +8,21 @@ from .knowledge_base.manager import KnowledgeBaseManager
 from langchain_google_genai import ChatGoogleGenerativeAI
 from typing import Dict
 from .models.appointments import AppointmentRequest, MarketingMeetingRequest 
+
+# Load environment variables from .env file
+load_dotenv()
+
 class COBCustomerCareSystem:
-    def __init__(self, clinic_db_path: str, cob_db_path: str, knowledge_base_path: str):
+    def __init__(self, clinic_db_path: str = "clinic_appointments_2.db",
+                 cob_db_path: str = "cob_system_2.db",
+                 knowledge_base_path: str = "knowledge_base/"):
+        # Get API key from environment
+        google_api_key = os.getenv("GOOGLE_API_KEY")
+        if not google_api_key:
+            raise ValueError("GOOGLE_API_KEY not found in environment variables")
         self.llm = ChatGoogleGenerativeAI(
             model='gemini-2.5-flash',
-            google_api_key="AIzaSyDEh4nWF9OA0oQSEys-tcLQcAfQpqxJesU",
+            google_api_key=google_api_key,
             temperature=0.3
         )
         
