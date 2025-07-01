@@ -13,8 +13,10 @@ from ..tools.knowledge_tools import KnowledgeRetrievalTool
 from ..knowledge_base.manager import KnowledgeBaseManager 
 from typing import Dict
 import json
+import re
 from datetime import datetime
 from dataclasses import asdict
+
 
 KNOWLEDGE_BASE_PATH = "knowledge_base/"
 
