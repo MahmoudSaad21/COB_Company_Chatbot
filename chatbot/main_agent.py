@@ -3,6 +3,7 @@ import re
 import time
 from collections import deque
 from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.messages import HumanMessage
 from .database.manager import DatabaseManager
 from .knowledge_base.manager import KnowledgeBaseManager
 from typing import Dict, Tuple, Deque
