@@ -12,6 +12,8 @@ from .models.appointments import AppointmentRequest, MarketingMeetingRequest
 # Load environment variables from .env file
 load_dotenv()
 
+KNOWLEDGE_BASE_PATH = "knowledge_base/"
+
 class COBCustomerCareSystem:
     def __init__(self, clinic_db_path: str = "clinic_appointments_2.db",
                  cob_db_path: str = "cob_system_2.db",
