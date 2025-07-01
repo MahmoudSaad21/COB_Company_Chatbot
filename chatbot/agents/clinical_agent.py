@@ -12,6 +12,9 @@ from ..tools.clinic_tools import (  # ADD THIS IMPORT
 from ..tools.knowledge_tools import KnowledgeRetrievalTool 
 from ..knowledge_base.manager import KnowledgeBaseManager 
 from typing import Dict
+import json
+from datetime import datetime
+from dataclasses import asdict
 
 KNOWLEDGE_BASE_PATH = "knowledge_base/"
 
