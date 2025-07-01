@@ -1,4 +1,5 @@
 from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.messages import HumanMessage
 from ..database.manager import DatabaseManager
 from ..main_agent import MainOrchestratorAgent
 from ..models.appointments import AppointmentRequest
