@@ -1,6 +1,9 @@
 from langchain_google_genai import ChatGoogleGenerativeAI
 from ..knowledge_base.manager import KnowledgeBaseManager
 from ..main_agent import MainOrchestratorAgent
+from ..tools.knowledge_tools import KnowledgeRetrievalTool
+from langchain_core.messages import HumanMessage
+
 
 class KnowledgeAgent:
     """Agent specialized in handling product and company knowledge queries"""
