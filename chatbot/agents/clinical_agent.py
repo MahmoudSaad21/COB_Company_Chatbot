@@ -71,9 +71,19 @@ class ClinicalAgent:
             elif user_input.lower() in ['no', 'n']:
                 session_data.pop('pending_confirmation', None)
                 return "Let's make changes. What would you like to change?"
-        
+
         # Extract all clinical parameters from user input
         extracted_params = self._extract_clinical_parameters(user_input)
+
+        # Add logic to check for "tomorrow" or "next week"
+        lowered_input = user_input.lower()
+        today = datetime.today()
+
+        if "tomorrow" in lowered_input:
+            extracted_params["date"] = (today + timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S")
+        elif "next week" in lowered_input:
+            extracted_params["date"] = (today + timedelta(weeks=1)).strftime("%Y-%m-%d %H:%M:%S")
+
         
         # Update request with extracted parameters
         for key, value in extracted_params.items():
