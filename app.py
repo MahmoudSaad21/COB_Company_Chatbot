@@ -7,8 +7,6 @@ from dotenv import load_dotenv
 import sqlite3
 import pandas as pd
 
-# Load environment variables
-load_dotenv()
 
 # Add current directory to Python path
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))
@@ -21,8 +19,15 @@ except ImportError as e:
     st.error("Make sure your chatbot system is properly structured")
     st.stop()
 
+# Define the path to the .env file
+ENV_FILE_PATH = "./.env"
 
 
+# Load environment variables
+if os.path.exists(ENV_FILE_PATH):
+    load_dotenv(dotenv_path=ENV_FILE_PATH, override=True)
+else:
+    load_dotenv()
 # Page configuration
 st.set_page_config(
     page_title="COB Company Chatbot",
@@ -182,14 +187,41 @@ st.markdown("""
 
 # Initialize session state
 if 'chatbot' not in st.session_state:
-    st.session_state.chatbot = COBCustomerCareSystem(
-        clinic_db_path="clinic_appointments_2.db",
-        cob_db_path="cob_system_2.db",
-        knowledge_base_path="knowledge_base/"
-    )
+    # Check if API key is valid before initializing chatbot
+    api_key = os.getenv("GOOGLE_API_KEY")
+    valid_api_key = False
+    
+    if api_key:
+        try:
+            # Try a simple validation (we'll actually validate when we try to use it)
+            if len(api_key) > 30 and api_key.startswith("AIza"):
+                valid_api_key = True
+        except:
+            valid_api_key = False
+    
+    if valid_api_key:
+        try:
+            # Import and initialize only if we have a potentially valid key
+            from chatbot.chatbot_system import COBCustomerCareSystem
+            st.session_state.chatbot = COBCustomerCareSystem(
+                clinic_db_path="clinic_appointments_2.db",
+                cob_db_path="cob_system_2.db",
+                knowledge_base_path="knowledge_base/"
+            )
+        except ImportError as e:
+            st.error(f"Failed to import chatbot: {str(e)}")
+            st.error("Make sure your chatbot system is properly structured")
+            st.session_state.chatbot = None
+        except Exception as e:
+            st.error(f"Chatbot initialization failed: {str(e)}")
+            st.session_state.chatbot = None
+    else:
+        st.session_state.chatbot = None
+    
     st.session_state.messages = []
     st.session_state.session_id = "streamlit_session"
     st.session_state.last_input = ""
+    st.session_state.api_key_valid = valid_api_key
 
 # Sidebar for additional controls
 with st.sidebar:
@@ -201,17 +233,64 @@ with st.sidebar:
     st.markdown(f"Clinic Database: {'✅ Connected' if os.path.exists('clinic_appointments_2.db') else '❌ Not Found'}")
     st.markdown(f"COB Database: {'✅ Connected' if os.path.exists('cob_system_2.db') else '❌ Not Found'}")
     
+    # API Key Configuration Section
+    st.divider()
+    st.subheader("API Key Configuration")
+    
+    current_api_key = os.getenv("GOOGLE_API_KEY", "")
+    api_key_status = st.empty()
+    
+    if current_api_key:
+        api_key_status.success("✅ API Key is configured")
+        if st.button("Show API Key"):
+            st.code(f"Current API Key: {current_api_key[:4]}...{current_api_key[-4:]}")
+    else:
+        api_key_status.warning("⚠️ API Key not configured")
+    
+    # API Key input form
+    with st.form("api_key_form"):
+        new_api_key = st.text_input("Enter Google API Key", type="password", value="", help="Get your API key from Google Cloud Console")
+        submitted = st.form_submit_button("Update API Key")
+        
+        if submitted:
+            if new_api_key:
+                try:
+                    # Create directory if it doesn't exist
+                    os.makedirs(os.path.dirname(ENV_FILE_PATH), exist_ok=True)
+                    
+                    # Update the .env file
+                    with open(ENV_FILE_PATH, "w") as f:
+                        f.write(f"GOOGLE_API_KEY={new_api_key}\n")
+
+                    # Update environment variable
+                    os.environ["GOOGLE_API_KEY"] = new_api_key
+                    
+                    # Update session state
+                    st.session_state.api_key_valid = True
+
+                    # Reset chatbot to force reinitialization
+                    if 'chatbot' in st.session_state:
+                        del st.session_state['chatbot']
+                    
+                    st.success("✅ API Key updated successfully! Please wait...")
+                    time.sleep(1)
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"Failed to update API key: {str(e)}")
+            else:
+                st.warning("Please enter a valid API key")
+
     st.divider()
     
     # Conversation controls
     st.subheader("Conversation Tools")
     if st.button("New Conversation"):
-        st.session_state.chatbot.reset_session(st.session_state.session_id)
+        if 'chatbot' in st.session_state and st.session_state.chatbot:
+            st.session_state.chatbot.reset_session(st.session_state.session_id)
         st.session_state.messages = []
         st.rerun()
     
     if st.button("Generate Sample Data"):
-        # This would need to be implemented
         st.info("Sample data generation would run here")
         time.sleep(1)
         st.rerun()
@@ -235,11 +314,19 @@ with st.sidebar:
 st.title("COB Company Chat Assistant")
 st.caption("Your AI-powered customer service assistant")
 
-# Chat container with improved structure
+# Chat container
+st.markdown('<div class="chat-container">', unsafe_allow_html=True)
 st.markdown('<div class="chat-header">COB Virtual Assistant</div>', unsafe_allow_html=True)
 
 # Messages display
 st.markdown('<div class="messages-container">', unsafe_allow_html=True)
+
+# Show warning if API key is invalid or missing
+if not st.session_state.api_key_valid or not st.session_state.chatbot:
+    st.warning("⚠️ API key is missing or invalid. Please configure a valid Google API key in the sidebar to use the chatbot.")
+    st.info("Get an API key from Google Cloud Console: https://cloud.google.com/generative-ai/documentation/api-keys")
+
+# Display chat messages
 for message in st.session_state.messages:
     if message['role'] == 'user':
         st.markdown(
@@ -261,11 +348,15 @@ for message in st.session_state.messages:
         )
 st.markdown('</div>', unsafe_allow_html=True)  # Close messages-container
 
-# Input area
+# Input area (disabled if no valid API key)
 st.markdown('<div class="input-container">', unsafe_allow_html=True)
-user_input = st.chat_input("Type your message here...", key="user_input")
+user_input = st.chat_input(
+    "Type your message here..." if st.session_state.api_key_valid and st.session_state.chatbot else "Configure API key to enable chat",
+    disabled=not (st.session_state.api_key_valid and st.session_state.chatbot),
+    key="user_input"
+)
 
-if user_input and user_input != st.session_state.last_input:
+if user_input and user_input != st.session_state.last_input and st.session_state.chatbot:
     st.session_state.last_input = user_input
     
     # Add user message to history
@@ -276,19 +367,29 @@ if user_input and user_input != st.session_state.last_input:
     }
     st.session_state.messages.append(user_message)
     
-    # Get bot response
-    bot_response = st.session_state.chatbot.process_message(
-        user_input, 
-        st.session_state.session_id
-    )
-    
-    # Add bot response to history
-    bot_message = {
-        'role': 'bot',
-        'content': bot_response,
-        'time': datetime.now().strftime("%H:%M")
-    }
-    st.session_state.messages.append(bot_message)
+    try:
+        # Get bot response
+        bot_response = st.session_state.chatbot.process_message(
+            user_input, 
+            st.session_state.session_id
+        )
+        
+        # Add bot response to history
+        bot_message = {
+            'role': 'bot',
+            'content': bot_response,
+            'time': datetime.now().strftime("%H:%M")
+        }
+        st.session_state.messages.append(bot_message)
+    except Exception as e:
+        error_msg = f"Error processing your request: {str(e)}"
+        bot_message = {
+            'role': 'bot',
+            'content': error_msg,
+            'time': datetime.now().strftime("%H:%M")
+        }
+        st.session_state.messages.append(bot_message)
+        st.error(f"Chatbot error: {str(e)}")
     
     # Rerun to update display
     st.rerun()
