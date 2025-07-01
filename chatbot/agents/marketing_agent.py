@@ -2,6 +2,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from ..database.manager import DatabaseManager
 from ..main_agent import MainOrchestratorAgent
 from ..models.appointments import MarketingMeetingRequest
+from ..tools.marketing_tools import MarketingAvailabilityTool, MarketingMeetingBookingTool
 from typing import Dict, Tuple, Optional
 
 class MarketingAgent:
