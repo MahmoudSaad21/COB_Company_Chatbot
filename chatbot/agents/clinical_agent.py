@@ -8,8 +8,11 @@ from ..tools.clinic_tools import (  # ADD THIS IMPORT
     ClinicInfoTool,
     DoctorAvailabilityTool
 )
-from ..models.knowledge_tools import KnowledgeRetrievalTool
+from ..tools.knowledge_tools import KnowledgeRetrievalTool 
+from ..knowledge_base.manager import KnowledgeBaseManager 
 from typing import Dict
+
+KNOWLEDGE_BASE_PATH = "knowledge_base/"
 
 class ClinicalAgent:
     def __init__(self, llm: ChatGoogleGenerativeAI, db_manager: DatabaseManager, orchestrator: MainOrchestratorAgent):
