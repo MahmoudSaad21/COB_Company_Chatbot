@@ -2,6 +2,13 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from ..database.manager import DatabaseManager
 from ..main_agent import MainOrchestratorAgent
 from ..models.appointments import AppointmentRequest
+from ..tools.clinic_tools import (  # ADD THIS IMPORT
+    ClinicAvailabilityTool, 
+    AppointmentBookingTool,
+    ClinicInfoTool,
+    DoctorAvailabilityTool
+)
+from ..models.knowledge_tools import KnowledgeRetrievalTool
 from typing import Dict
 
 class ClinicalAgent:
