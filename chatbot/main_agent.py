@@ -2,6 +2,7 @@ import json
 import re
 import time
 from collections import deque
+from uuid import uuid4
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage
 from .database.manager import DatabaseManager
