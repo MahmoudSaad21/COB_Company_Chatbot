@@ -82,9 +82,7 @@ graph TD
 ## Demo
 
 
-https://github.com/user-attachments/assets/3f31a493-60f3-4cba-aa64-1da42f1c4b8a
-
-
+https://github.com/user-attachments/assets/baee2452-fd46-49b5-b07d-7dae9314b796
 
 
 ## Getting Started
