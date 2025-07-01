@@ -3,6 +3,7 @@ from ..knowledge_base.manager import KnowledgeBaseManager
 from ..main_agent import MainOrchestratorAgent
 from ..tools.knowledge_tools import KnowledgeRetrievalTool
 from langchain_core.messages import HumanMessage
+import re
 
 
 class KnowledgeAgent:
