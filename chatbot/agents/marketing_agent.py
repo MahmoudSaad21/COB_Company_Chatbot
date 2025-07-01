@@ -6,6 +6,7 @@ from ..models.appointments import MarketingMeetingRequest
 from ..tools.marketing_tools import MarketingAvailabilityTool, MarketingMeetingBookingTool
 from typing import Dict, Tuple, Optional
 from dataclasses import asdict
+import re
 import json
 
 class MarketingAgent:
