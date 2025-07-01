@@ -5,7 +5,7 @@ from .main_agent import MainOrchestratorAgent
 from .agents import ClinicalAgent, MarketingAgent, KnowledgeAgent
 from .database.manager import DatabaseManager
 from .knowledge_base.manager import KnowledgeBaseManager
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 from typing import Dict
 from .models.appointments import AppointmentRequest, MarketingMeetingRequest 
 
