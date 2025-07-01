@@ -1,8 +1,11 @@
+import os
 import sqlite3
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List, Tuple, Optional, Dict
 from langchain.schema import Document
-
+from langchain_community.vectorstores import FAISS
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.document_loaders import DirectoryLoader, TextLoader
 
 # Database Connection Manager
 class DatabaseManager:
