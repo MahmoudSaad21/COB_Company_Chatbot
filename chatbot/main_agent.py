@@ -7,6 +7,8 @@ from .database.manager import DatabaseManager
 from .knowledge_base.manager import KnowledgeBaseManager
 from typing import Dict, Tuple, Deque
 
+MAX_HISTORY = 5
+
 # Agent Classes
 class MainOrchestratorAgent:
     """Main agent that routes conversations to appropriate sub-agents"""
