@@ -1,0 +1,11 @@
+streamlit==1.46.1
+python-dotenv==1.1.1
+pandas==2.2.2
+faker==37.4.0
+langchain==0.3.26
+langchain-google-genai
+google-generativeai==0.8.5.
+faiss-cpu==1.11.0
+tqdm==4.67.1
+numpy==2.0.2
+sqlite3
