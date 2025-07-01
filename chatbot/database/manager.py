@@ -91,6 +91,9 @@ class DatabaseManager:
         FROM appointments
         WHERE available = 'True' AND DATE(slot_datetime) = ?
         """
+
+        date = datetime.strptime(date, "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d")
+        
         params = [date]
 
         if specialty:
