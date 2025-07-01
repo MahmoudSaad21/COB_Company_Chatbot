@@ -1,7 +1,12 @@
+import os
 import sqlite3
 import pandas as pd
+from dotenv import load_dotenv
 from clinic_data import gen_clinic_schedule
 from cob_data import gen_products_manual, gen_marketing_schedule, gen_cob_customers
+
+# Load environment variables
+load_dotenv()
 
 def generate_databases():
     # Generate data
@@ -10,9 +15,9 @@ def generate_databases():
     marketing_df = gen_marketing_schedule(7, 30, 9, 17)
     clinic_df = gen_clinic_schedule(5, 8, 14, 9, 17)
 
-    # Save to SQLite databases
-    clinic_db_path = 'clinic_appointments_2.db'
-    cob_db_path = 'cob_system_2.db'
+    # Get database paths from environment or use defaults
+    clinic_db_path = os.getenv("CLINIC_DB_PATH", "clinic_appointments_2.db")
+    cob_db_path = os.getenv("COB_DB_PATH", "cob_system_2.db")
 
     # Insert clinic data
     with sqlite3.connect(clinic_db_path) as conn:
