@@ -63,6 +63,15 @@ class AppointmentBookingTool(BaseTool):
         try:
             conn = self.db_manager.get_clinic_connection()
             cursor = conn.cursor()
+            # Clean slot_datetime: remove any duplicate time info
+            try:
+                # Try to parse and normalize to "YYYY-MM-DD HH:MM:SS"
+                slot_datetime = datetime.strptime(slot_datetime.strip(), "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d %H:%M:%S")
+            except ValueError:
+                # If it looks like "2025-07-02 04:45:30 12:00:00", fix it
+                parts = slot_datetime.strip().split()
+                if len(parts) >= 2:
+                    slot_datetime = f"{parts[0]} {parts[-1]}"  # Use first date + last time
 
             # Generate appointment ID
             appointment_id = str(uuid4())
