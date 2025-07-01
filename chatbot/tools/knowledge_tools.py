@@ -1,3 +1,4 @@
+import json
 from langchain.tools import BaseTool
 from pydantic import Field
 from ..knowledge_base.manager import KnowledgeBaseManager
